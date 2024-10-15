@@ -109,6 +109,15 @@ void repartoInicial (Pila &mazo, string mesa[][10]) {
     mesa[0][1]=mazo.pop();
     mesa[1][1]=mazo.pop();
 }
+// Función para mostrar la mano de un jugador
+void mostrarMano(string jugador[], int numCartas, const string &nombreJugador) {
+    cout << nombreJugador << " tiene: ";
+    for (int i = 0; i < numCartas; i++) {
+        cout << jugador[i] << " ";
+    }
+    cout << endl;
+}
+
 // Función para calcular el puntaje de las cartas
 int calcularPuntaje(string jugador[], int numCartas) {
     int puntaje = 0;
