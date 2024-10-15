@@ -102,7 +102,7 @@ void revolver(Pila &mazo, string &mazoinicial, vector<string> &simbolos) {
     cout<<mazo.count();**/
 }
 
-void repartir (Pila &mazo, Pila &crupier, Pila &Jugador){
+void repartoInicial (Pila &mazo, Pila &crupier, Pila &Jugador){
     Jugador.push(mazo.pop());
     crupier.push(mazo.pop());
     Jugador.push(mazo.pop());
