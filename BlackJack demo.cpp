@@ -103,21 +103,20 @@ void revolver(Pila &mazo, string &mazoinicial, vector<string> &simbolos) {
     random_shuffle(mazo.ARREGLO, mazo.ARREGLO + 52);
 }
 
-void repartoInicial (Pila &mazo, Pila &crupier, Pila &Jugador) {
-    Jugador.push(mazo.pop());
-    crupier.push(mazo.pop());
-    Jugador.push(mazo.pop());
-    crupier.push(mazo.pop());
+void repartoInicial (Pila &mazo, string mesa[][10]) {
+    mesa[0][0]=mazo.pop();
+    mesa[1][0]=mazo.pop();
+    mesa[0][1]=mazo.pop();
+    mesa[1][1]=mazo.pop();
 }
 
 int main() {
-    Pila crupier;
-    Pila Jugador;
+    string mesa[2][10]; //fila 1 es para el jugador, la fila 2 para el crupier.
     Pila mazo;  
     string mazoinicial = "123456789JQKA";  // Las cartas numeradas y letras
     vector<string> simbolos = {"Diamantes", "Tréboles", "Corazones", "Picas"};  
     bool jugar = true;
-    int opcion, levantarse = 2;
+    int opcion, partida = 2, turno = 0, conteo_pedir = 0;
     
     while (jugar == true) {
         cout<< "       BLACKJACK"<<endl<<endl;
@@ -127,11 +126,27 @@ int main() {
         switch(opcion) {
             case 1:
                 
-                while (levantarse == 2) {
+                while (partida == 2) {
+                    mazo.clearScreen();
                     revolver(mazo, mazoinicial, simbolos);
-                    cout << mazo.peek() << endl;
-                    cout << "prueba: " << endl;
-                    cin >> levantarse;
+                    repartoInicial(mazo, mesa);
+                    while (turno == 0){
+                        cout<<"         Crupier"<<endl;
+                        cout<<  mesa[1][0]<<"  ";
+                        if (conteo_pedir == 0){
+                            cout<<" Carta oculta."<<endl;
+                        }
+                        else{
+                            cout<<mesa[1][1]<<endl;
+                        }
+                        cout<<"         Jugador"<<endl;
+                        cout<<  mesa[0][0]<<"  "<<mesa[0][1]<<endl<<endl;
+                        cout<<"1. Pedir carta."<<endl;
+                        cout<<"2. Doblar apuesta. "<<endl;
+                        cout<<"3. Terminar turno. "<<endl;
+                        cin>>turno;
+                    }
+                    
                 }
                 break;
             case 2:
@@ -153,5 +168,4 @@ int main() {
     **/
     return 0;
 }
-
 
