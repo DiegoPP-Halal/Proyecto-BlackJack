@@ -109,6 +109,38 @@ void repartoInicial (Pila &mazo, string mesa[][10]) {
     mesa[0][1]=mazo.pop();
     mesa[1][1]=mazo.pop();
 }
+// Función para calcular el puntaje de las cartas
+int calcularPuntaje(string jugador[], int numCartas) {
+    int puntaje = 0;
+    int ases = 0; // Contador de Ases
+
+    for (int i = 0; i < numCartas; i++) {
+        string carta = jugador[i];
+        char valor = carta[carta.size() - 1]; // Obtener el último carácter para saber el valor
+
+        // Cartas numéricas
+        if (valor >= '2' && valor <= '9') {
+            puntaje += valor - '0'; // Convertir carácter numérico a entero
+        }
+        // Cartas 10, J, Q, K valen 10
+        else if (valor == '1' || valor == 'J' || valor == 'Q' || valor == 'K') {
+            puntaje += 10;
+        }
+        // As
+        else if (valor == 'A') {
+            ases++;
+            puntaje += 11; // El As inicialmente vale 11
+        }
+    }
+
+    // Si hay Ases y el puntaje es mayor a 21, restar 10 por cada As hasta que no se pase de 21
+    while (puntaje > 21 && ases > 0) {
+        puntaje -= 10;
+        ases--;
+    }
+
+    return puntaje;
+}
 
 int main() {
     string mesa[2][10]; //fila 1 es para el jugador, la fila 2 para el crupier.
@@ -141,6 +173,17 @@ int main() {
                         }
                         cout<<"         Jugador"<<endl;
                         cout<<  mesa[0][0]<<"  "<<mesa[0][1]<<endl<<endl;
+                        
+                        // Mostrar puntaje de los jugadores 
+                        string jugador[2] = {mesa[0][0], mesa[0][1]};
+                        string crupier[2] = {mesa[1][0], mesa[1][1]};
+
+                        int puntajeJugador = calcularPuntaje(jugador, 2);
+                        int puntajeCrupier = calcularPuntaje(crupier, 2);
+
+                        cout << "Puntaje del Jugador: " << puntajeJugador << endl;
+                        cout << "Puntaje del Crupier (visible): " << calcularPuntaje(crupier, 1) << endl << endl;
+                        
                         cout<<"1. Pedir carta."<<endl;
                         cout<<"2. Doblar apuesta. "<<endl;
                         cout<<"3. Terminar turno. "<<endl;
