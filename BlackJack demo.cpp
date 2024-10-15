@@ -138,7 +138,17 @@ int main() {
     
     
 
-    // Siguiente: puedes implementar el resto de las funciones como repartir cartas, reglas del blackjack, etc.
+    /**
+        Por hacer: las funciones de las reglas del black jack, valores de las cartas y la visualización de la mesa.
+        reglas a implementar: 
+            -El jugador gana si tiene mayor puntaje que el crupier y menos que 22.
+            -El jugador gana con 5 cartas si la suma es menor a 22.
+            -El dealer debe plantarse en 17.
+            -Las apuestas se hacen antes de empezar a jugar. Excepción: doblar la apuesta.
+            -El dealer mantiene una carta oculta hasta que sea su turno.
+        Valores:
+            -J,Q and K valen 11. A puede valer 1 u 11.
+    **/
 
     return 0;
 }
