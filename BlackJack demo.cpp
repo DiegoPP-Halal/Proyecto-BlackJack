@@ -1,7 +1,8 @@
 #include <iostream>
-#include <algorithm> // Para usar random_shuffle
-#include <stdlib.h>  // Para usar system()
-#include <limits>    // Para la validación de la variable op
+#include <algorithm> // Para usar random_shuffle (revolver)
+#include <cstdlib>   // Para usar system() y srand()
+#include <ctime>     // Para usar time() (que no se repita el mazo revuelto)
+#include <limits>    // Para la validación de la variable opción (pending)
 #include <vector>    // Para usar vector en lugar de arrays
 
 #ifdef _WIN32
@@ -84,9 +85,10 @@ class Pila {
 
 // Función para revolver el mazo
 void revolver(Pila &mazo, string &mazoinicial, vector<string> &simbolos) {
-    random_shuffle(mazoinicial.begin(), mazoinicial.end());  // Mezcla los números/letras
-    random_shuffle(simbolos.begin(), simbolos.end());  // Mezcla los símbolos
-
+    while (!mazo.isEmpty()) {
+        mazo.pop();
+    }
+    
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 13; j++) {
             string carta = simbolos[i] + " " + mazoinicial[j];  // Concatenar símbolo y número/letra
@@ -94,15 +96,14 @@ void revolver(Pila &mazo, string &mazoinicial, vector<string> &simbolos) {
         }
     }
 
+    // Inicializar el generador de números aleatorios con una semilla basada en el tiempo
+    srand(time(0));
+
     // Mezclar todo el mazo
     random_shuffle(mazo.ARREGLO, mazo.ARREGLO + 52);
-
-    /** Mostrar las cartas mezcladas
-    mazo.MostrarTodo();
-    cout<<mazo.count();**/
 }
 
-void repartoInicial (Pila &mazo, Pila &crupier, Pila &Jugador){
+void repartoInicial (Pila &mazo, Pila &crupier, Pila &Jugador) {
     Jugador.push(mazo.pop());
     crupier.push(mazo.pop());
     Jugador.push(mazo.pop());
@@ -112,31 +113,32 @@ void repartoInicial (Pila &mazo, Pila &crupier, Pila &Jugador){
 int main() {
     Pila crupier;
     Pila Jugador;
-    Pila mazo;  // Instancia de la pila para el mazo
+    Pila mazo;  
     string mazoinicial = "123456789JQKA";  // Las cartas numeradas y letras
-    vector<string> simbolos = {"Diamantes", "Tréboles", "Corazones", "Picas"};  // Los 4 palos
+    vector<string> simbolos = {"Diamantes", "Tréboles", "Corazones", "Picas"};  
     bool jugar = true;
     int opcion, levantarse = 2;
     
-    while (jugar == true){
+    while (jugar == true) {
         cout<< "       BLACKJACK"<<endl<<endl;
         cout<<"1. Jugar."<<endl;
         cout<<"2. Salir del juego."<<endl;
         cin>>opcion;
-        switch(opcion){
+        switch(opcion) {
             case 1:
-                mazo.clearScreen();
-                revolver(mazo,mazoinicial,simbolos);
                 
-            break;
+                while (levantarse == 2) {
+                    revolver(mazo, mazoinicial, simbolos);
+                    cout << mazo.peek() << endl;
+                    cout << "prueba: " << endl;
+                    cin >> levantarse;
+                }
+                break;
             case 2:
-            jugar = false;
-            break;
+                jugar = false;
+                break;
         }
     }
-
-    
-    
 
     /**
         Por hacer: las funciones de las reglas del black jack, valores de las cartas y la visualización de la mesa.
@@ -149,7 +151,6 @@ int main() {
         Valores:
             -J,Q and K valen 11. A puede valer 1 u 11.
     **/
-
     return 0;
 }
 
