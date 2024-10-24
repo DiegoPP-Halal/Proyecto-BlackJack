@@ -185,7 +185,7 @@ int main() {
                         
                         // Mostrar puntaje de los jugadores 
                         string jugador[2] = {mesa[0][0], mesa[0][1]};
-                        string crupier[2] = {mesa[1][0], mesa[1][1]};
+                        string crupier[2] = {mesa[1][0], mesa[1][1]};  //Problema: Al incrementar las cartas no se puede almacenar en los vectores jugador y crupier.
 
                         int puntajeJugador = calcularPuntaje(jugador, 2);
                         int puntajeCrupier = calcularPuntaje(crupier, 2);
