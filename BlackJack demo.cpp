@@ -125,7 +125,7 @@ int main() {
     string mazoinicial = "123456789JQKA";
     vector<string> simbolos = {"Diamantes", "Tréboles", "Corazones", "Picas"};
     bool jugar = true;
-    int dinero = 1000;  // Dinero inicial del jugador
+    int dinero = 1000;  // Dinero inicial del jugador, puede ser cambiado
     int apuesta;
 
     while (jugar) {
