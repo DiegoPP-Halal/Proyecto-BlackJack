@@ -4,7 +4,7 @@
 #include <ctime>
 #include <vector>
 #include <string>
-
+#include <limits>
 #ifdef _WIN32
     #include <windows.h>
 #endif
@@ -114,10 +114,15 @@ void mostrarMano(vector<string> &mano, string nombre, bool mostrarTodas = true) 
         if (!mostrarTodas && i == 1) {
             cout << "Carta oculta ";
         } else {
-            cout << mano[i] << " ";
+            if (mano[i].back() == '1') {
+                cout << mano[i] << "0   ";  // Mostrar mano[i] seguido de '0'
+            } else {
+                cout << mano[i] << "   ";  // Mostrar normalmente
+            }
+            
         }
     }
-    cout << endl;
+    cout << endl<<endl;
 }
 
 int main() {
@@ -134,6 +139,12 @@ int main() {
         cout << "1. Jugar.\n2. Salir del juego.\n";
         int opcion;
         cin >> opcion;
+        if (opcion < 1 or opcion > 2 or cin.fail()){
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+            mazo.clearScreen();  // Limpiar pantalla según sistema operativo
+            cout<<"Error. Digite un numero dentro del rango. "<<endl<<endl;
+        }
 
         if (opcion == 2) {
             jugar = false;
@@ -160,7 +171,7 @@ int main() {
             mostrarMano(jugador, "Jugador");
 
             int puntajeJugador = calcularPuntaje(jugador);
-            cout << "Puntaje del Jugador: " << puntajeJugador << endl;
+            cout << "Puntaje del Jugador: " << puntajeJugador << endl<<endl;
 
             if (puntajeJugador > 21) {
                 cout << "Te pasaste de 21. Pierdes la apuesta.\n";
@@ -189,17 +200,18 @@ int main() {
 
             cout << "Puntaje del Crupier: " << puntajeCrupier << endl;
             if (puntajeCrupier > 21 || puntajeJugador > puntajeCrupier) {
-                cout << "¡Ganaste! Ganas $" << apuesta << ".\n";
+                cout <<endl<<endl<< "¡Ganaste! Ganas $" << apuesta << ".\n";
                 dinero += apuesta;
             } else if (puntajeJugador < puntajeCrupier) {
-                cout << "Perdiste. Pierdes $" << apuesta << ".\n";
+                cout <<endl<<endl<< "Perdiste. Pierdes $" << apuesta << ".\n";
                 dinero -= apuesta;
             } else {
-                cout << "Empate. Recuperas tu apuesta.\n";
+                cout << endl<<endl<<"Empate. Recuperas tu apuesta.\n";
             }
         }
 
         if (dinero <= 0) {
+            mazo.clearScreen();
             cout << "Te quedaste sin dinero. Fin del juego.\n";
             jugar = false;
         }
