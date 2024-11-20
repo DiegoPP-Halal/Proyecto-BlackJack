@@ -50,6 +50,7 @@ public:
         return (top == 51);
     }
 };
+
 void clearScreen() {
     #ifdef _WIN32
         system("cls");
@@ -57,6 +58,7 @@ void clearScreen() {
         system("clear");
     #endif
 }
+
 int solicitarOpcion(const string& mensaje, int min, int max) {
     int opcion;
     while (true) {
@@ -67,7 +69,7 @@ int solicitarOpcion(const string& mensaje, int min, int max) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
             clearScreen();
             cout << "Opción inválida. Por favor, ingrese un número entre ";
-            cout << min << " y " << max << "." << endl<<endl;
+            cout << min << " y " << max << "." << endl << endl;
         } else {
             return opcion;
         }
@@ -151,8 +153,8 @@ int main() {
         cout << "       BLACKJACK\n\n";
         cout << "Dinero actual: $" << dinero << endl;
 
-        int opcion = solicitarOpcion("1. Jugar.\n2. Salir del juego.\nSeleccione una opción: ", 1, 2);
-
+        int opcion = solicitarOpcion("1. Jugar.\n2. Salir del juego. ", 1, 2);
+        cout<<endl;
         if (opcion == 2) {
             jugar = false;
             break;
@@ -173,7 +175,7 @@ int main() {
 
         bool turnoJugador = true;
         while (turnoJugador) {
-            clearScreen();
+            
             mostrarMano(crupier, "Crupier", false);
             mostrarMano(jugador, "Jugador");
 
@@ -187,21 +189,33 @@ int main() {
                 break;
             }
 
-            cout << "1. Pedir carta.\n2. Terminar turno.\n";
+            cout << "1. Pedir carta.\n2. Terminar turno.\n3. Doblar (aumentar la apuesta y recibir solo una carta).\n";
             int eleccion;
             cin >> eleccion;
 
-            if (cin.fail() || eleccion < 1 || eleccion > 2) {
+            if (cin.fail() || eleccion < 1 || eleccion > 3) {
                 cin.clear();
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Opción inválida. Por favor, intente de nuevo.\n";
                 continue; // Repite la iteración, mostrando nuevamente las manos.
             }
 
-            if (eleccion == 1) {
+            if (eleccion == 1) { // Pedir carta
                 jugador.push_back(mazo.pop());
-            } else if (eleccion == 2) {
+            } else if (eleccion == 2) { // Terminar turno
                 turnoJugador = false;
+            } else if (eleccion == 3) { // Doblar
+                // Verificar si el jugador tiene suficiente dinero para duplicar la apuesta
+                if (apuesta * 2 <= dinero) {
+                    apuesta *= 2; // Doblar la apuesta
+                    jugador.push_back(mazo.pop()); // Recibir una carta
+                    cout << "Has doblado tu apuesta a $" << apuesta << ".\n";
+                    turnoJugador = false; // Terminar el turno
+                } else {
+                    clearScreen();
+                    cout << "No tienes suficiente dinero para doblar tu apuesta. Tu apuesta es de $" << apuesta << " y necesitas otros $" << apuesta << " para hacerlo.\n";
+                    continue; // Repite la iteración, mostrando nuevamente las manos.
+                }
             }
         }
 
