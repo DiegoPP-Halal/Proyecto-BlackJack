@@ -49,15 +49,30 @@ public:
     bool isFull() {
         return (top == 51);
     }
-
-    void clearScreen() {
-        #ifdef _WIN32
-            system("cls");
-        #else
-            system("clear");
-        #endif
-    }
 };
+void clearScreen() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+int solicitarOpcion(const string& mensaje, int min, int max) {
+    int opcion;
+    while (true) {
+        cout << mensaje;
+        cin >> opcion;
+        if (cin.fail() || opcion < min || opcion > max) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            clearScreen();
+            cout << "Opción inválida. Por favor, ingrese un número entre ";
+            cout << min << " y " << max << "." << endl<<endl;
+        } else {
+            return opcion;
+        }
+    }
+}
 
 void revolver(Pila &mazo, string &mazoinicial, vector<string> &simbolos) {
     while (!mazo.isEmpty()) {
@@ -115,14 +130,13 @@ void mostrarMano(vector<string> &mano, string nombre, bool mostrarTodas = true) 
             cout << "Carta oculta ";
         } else {
             if (mano[i].back() == '1') {
-                cout << mano[i] << "0   ";  // Mostrar mano[i] seguido de '0'
+                cout << mano[i] << "0   ";  
             } else {
-                cout << mano[i] << "   ";  // Mostrar normalmente
+                cout << mano[i] << "   ";
             }
-            
         }
     }
-    cout << endl<<endl;
+    cout << endl << endl;
 }
 
 int main() {
@@ -130,28 +144,21 @@ int main() {
     string mazoinicial = "123456789JQKA";
     vector<string> simbolos = {"Diamantes", "Tréboles", "Corazones", "Picas"};
     bool jugar = true;
-    int dinero = 1000;  // Dinero inicial del jugador, puede ser cambiado
+    int dinero = 1000;
     int apuesta;
 
     while (jugar) {
         cout << "       BLACKJACK\n\n";
         cout << "Dinero actual: $" << dinero << endl;
-        cout << "1. Jugar.\n2. Salir del juego.\n";
-        int opcion;
-        cin >> opcion;
-        if (opcion < 1 or opcion > 2 or cin.fail()){
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-            mazo.clearScreen();  // Limpiar pantalla según sistema operativo
-            cout<<"Error. Digite un numero dentro del rango. "<<endl<<endl;
-        }
+
+        int opcion = solicitarOpcion("1. Jugar.\n2. Salir del juego.\nSeleccione una opción: ", 1, 2);
 
         if (opcion == 2) {
             jugar = false;
             break;
         }
 
-        mazo.clearScreen();
+        clearScreen();
         revolver(mazo, mazoinicial, simbolos);
 
         vector<string> jugador, crupier;
@@ -166,12 +173,12 @@ int main() {
 
         bool turnoJugador = true;
         while (turnoJugador) {
-            mazo.clearScreen();
+            clearScreen();
             mostrarMano(crupier, "Crupier", false);
             mostrarMano(jugador, "Jugador");
 
             int puntajeJugador = calcularPuntaje(jugador);
-            cout << "Puntaje del Jugador: " << puntajeJugador << endl<<endl;
+            cout << "Puntaje del Jugador: " << puntajeJugador << endl << endl;
 
             if (puntajeJugador > 21) {
                 cout << "Te pasaste de 21. Pierdes la apuesta.\n";
@@ -183,6 +190,13 @@ int main() {
             cout << "1. Pedir carta.\n2. Terminar turno.\n";
             int eleccion;
             cin >> eleccion;
+
+            if (cin.fail() || eleccion < 1 || eleccion > 2) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Opción inválida. Por favor, intente de nuevo.\n";
+                continue; // Repite la iteración, mostrando nuevamente las manos.
+            }
 
             if (eleccion == 1) {
                 jugador.push_back(mazo.pop());
@@ -200,18 +214,18 @@ int main() {
 
             cout << "Puntaje del Crupier: " << puntajeCrupier << endl;
             if (puntajeCrupier > 21 || puntajeJugador > puntajeCrupier) {
-                cout <<endl<<endl<< "¡Ganaste! Ganas $" << apuesta << ".\n";
+                cout << endl << endl << "¡Ganaste! Ganas $" << apuesta << ".\n";
                 dinero += apuesta;
             } else if (puntajeJugador < puntajeCrupier) {
-                cout <<endl<<endl<< "Perdiste. Pierdes $" << apuesta << ".\n";
+                cout << endl << endl << "Perdiste. Pierdes $" << apuesta << ".\n";
                 dinero -= apuesta;
             } else {
-                cout << endl<<endl<<"Empate. Recuperas tu apuesta.\n";
+                cout << endl << endl << "Empate. Recuperas tu apuesta.\n";
             }
         }
 
         if (dinero <= 0) {
-            mazo.clearScreen();
+            clearScreen();
             cout << "Te quedaste sin dinero. Fin del juego.\n";
             jugar = false;
         }
